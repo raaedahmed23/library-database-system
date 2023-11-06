@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine, ForeignKey, Column, String, Integer, Date, Float, Boolean
 from sqlalchemy.orm import sessionmaker, declarative_base
-from datetime import timedelta
 
 Base = declarative_base()
 
@@ -82,7 +81,8 @@ class Fines(Base):
         self.fine_amt = fine_amt
         self.paid = paid
 
-db_url = "mysql://root:raahm2304@localhost/library"
-engine = create_engine(db_url)
+if __name__ == "__main__":
+    db_url = "mysql://root:raahm2304@localhost/library"
+    engine = create_engine(db_url)
 
-Base.metadata.create_all(engine)
+    Base.metadata.create_all(engine)
