@@ -1,11 +1,14 @@
 from tkinter import *
+from tkinter import messagebox, simpledialog
 from tkinter.ttk import Treeview
 
 from schema import *
+from main import today_date
 
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
 
+from datetime import date, timedelta
 
 db_url = "mysql://root:raahm2304@localhost/library"
 engine = create_engine(db_url)
@@ -116,6 +119,7 @@ class MainPage():
         self.ResultTreeview.delete(*self.ResultTreeview.get_children())
 
         session = Session()
+        # Checking for availability of each book before displaying in result
         for res in self.data:
             isbn_to_check = res[0]
             is_present = session.query(Book_Loans.isbn).filter(Book_Loans.isbn == isbn_to_check).count() > 0
@@ -136,13 +140,48 @@ class MainPage():
 
     
     def select_book_for_checkout(self, _):
-        pass
+        selected_item = self.ResultTreeview.focus()
+        self.bookForCheckOutIsbn = self.ResultTreeview.item(selected_item)['text']
 
     def check_out(self):
-        pass
+        if self.bookForCheckOutIsbn is None:
+            messagebox.showwarning(title="Attention!", message="Please select a book to check out.")
+            return None
+        
+        self.borrowerId = simpledialog.askstring("Check Out Book", "Enter Borrower ID")
+
+        session = Session()
+
+        is_present = session.query(Borrower.card_id).filter(Borrower.card_id == self.borrowerId).count() > 0
+        if not is_present:
+            messagebox.showwarning(message="Borrower not in database.")
+            session.close()
+            return None
+
+        all_loans = session.query(Book_Loans.date_in).filter(Book_Loans.card_id == self.borrowerId).all()
+        active_loans = [loan[0] for loan in all_loans].count(None)
+        if active_loans >= 3:
+            messagebox.showwarning(message="Error: The borrower has 3 active loans")
+            session.close()
+            return None
+
+        id = session.query(func.max(Book_Loans.loan_id)).scalar() + 1 
+        print(id, self.bookForCheckOutIsbn, self.borrowerId, today_date)
+        new_loan = Book_Loans(loan_id=id, isbn=self.bookForCheckOutIsbn, card_id=self.borrowerId, date_out=today_date, due_date= today_date + timedelta(days=14))
+        # session.add(new_loan)
+
+        new_fine = Fines(loan_id=id, fine_amt=0.0, paid=False)
+        # session.add(new_fine)
+
+        # session.commit()
+        session.close()
+
+        messagebox.showinfo(message="Book loaned out successfully!")
+
 
     def check_in(self):
-        pass
+        self.checkInWindow = Toplevel(self.parent)
+        # self.app = CheckIn(self.checkInWindow)
 
     def update_fines(self):
         pass
