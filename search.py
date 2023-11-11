@@ -190,7 +190,9 @@ class MainPage():
         pass
 
     def change_day(self):
-        pass
+        global today_date
+        today_date += timedelta(days=1)
+        messagebox.showinfo(message=f"Today's date is now: {today_date}")
 
     def add_borrower(self):
         pass
