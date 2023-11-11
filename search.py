@@ -115,9 +115,24 @@ class MainPage():
     def view_results(self):
         self.ResultTreeview.delete(*self.ResultTreeview.get_children())
 
+        session = Session()
         for res in self.data:
+            isbn_to_check = res[0]
+            is_present = session.query(Book_Loans.isbn).filter(Book_Loans.isbn == isbn_to_check).count() > 0
+            if not is_present:
+                availability = "Available"
+            else:
+                loan_record = session.query(Book_Loans.date_in).filter(Book_Loans.isbn == isbn_to_check).order_by(Book_Loans.date_out).all()
+                
+                if loan_record[-1][0] is None:
+                    availability = "Not Available"
+                else:
+                    availability = "Available"
+
             self.ResultTreeview.insert('', 'end', text=str(res[0]),
-                                       values=(res[1], res[2], "available"))
+                                       values=(res[1], res[2], availability))
+        
+        session.close()
 
     
     def select_book_for_checkout(self, _):
