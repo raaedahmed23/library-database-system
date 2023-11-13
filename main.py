@@ -1,5 +1,8 @@
 import tkinter as tk
 from search import *
+from datetime import date
+
+today_date = date.today()
 
 if __name__ == "__main__":
     app = tk.Tk()
