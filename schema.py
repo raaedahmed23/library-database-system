@@ -45,7 +45,7 @@ class Borrower(Base):
     address = Column(String(255), nullable=False)
     phone = Column(String(15))
 
-    def __init__(self, card_id, ssn, bname, address, phone):
+    def __init__(self, card_id, ssn, bname, address, phone=None):
         self.card_id = card_id
         self.ssn = ssn
         self.bname = bname
