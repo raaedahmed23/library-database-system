@@ -15,7 +15,7 @@ Session = sessionmaker(engine)
 class PayFine:
     def __init__(self, master):
         self.parent = master
-
+        self.parent.title("Fine Payment")
         self.fine_amt = StringVar()
 
         self.borrowerLabel = Label(self.parent, text="Enter Borrower ID").grid(row=0, column=0, padx=20, pady=20)
