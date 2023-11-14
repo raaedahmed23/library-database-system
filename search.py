@@ -3,12 +3,15 @@ from tkinter import messagebox, simpledialog
 from tkinter.ttk import Treeview
 
 from schema import *
+from pay_fine import *
+from borrower import * 
+from checkin import *
 from main import today_date
 
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, func
 
-from datetime import date, timedelta
+from datetime import timedelta
 
 db_url = "mysql://root:raahm2304@localhost/library"
 engine = create_engine(db_url)
@@ -144,7 +147,7 @@ class MainPage():
         self.bookForCheckOutIsbn = self.ResultTreeview.item(selected_item)['text']
 
     def check_out(self):
-        if self.bookForCheckOutIsbn is None:
+        if self.bookForCheckOutIsbn is None or len(self.bookForCheckOutIsbn) == 0:
             messagebox.showwarning(title="Attention!", message="Please select a book to check out.")
             return None
         
@@ -166,10 +169,8 @@ class MainPage():
             return None
 
         id = session.query(func.max(Book_Loans.loan_id)).scalar() + 1 
-        print(id, self.bookForCheckOutIsbn, self.borrowerId, today_date)
         new_loan = Book_Loans(loan_id=id, isbn=self.bookForCheckOutIsbn, card_id=self.borrowerId, date_out=today_date, due_date= today_date + timedelta(days=14))
         # session.add(new_loan)
-
         new_fine = Fines(loan_id=id, fine_amt=0.0, paid=False)
         # session.add(new_fine)
 
@@ -181,13 +182,35 @@ class MainPage():
 
     def check_in(self):
         self.checkInWindow = Toplevel(self.parent)
-        # self.app = CheckIn(self.checkInWindow)
+        self.app = CheckIn(self.checkInWindow)
 
     def update_fines(self):
-        pass
+        session = Session()
+        result = session.query(Book_Loans.loan_id, Book_Loans.due_date, Book_Loans.date_in).all()
+
+        for res in result:
+            due_date = res[1]
+            date_in = res[2]
+
+            if date_in is None:
+                date_in = today_date
+
+            diff = date_in - due_date
+   
+            if diff.days > 0:
+                fine = int(diff.days) * 0.25
+                row_to_update = session.query(Fines).filter(Fines.loan_id == res[0]).all()
+                for row in row_to_update:
+                    row.fine_amt = fine
+            
+            session.commit()
+
+        messagebox.showinfo(message=f"Fines updates for today's date: {today_date}")
+
 
     def pay_fines(self):
-        pass
+        self.PayFineWindow = Toplevel(self.parent)
+        self.fine_app = PayFine(self.PayFineWindow)
 
     def change_day(self):
         global today_date
@@ -195,4 +218,5 @@ class MainPage():
         messagebox.showinfo(message=f"Today's date is now: {today_date}")
 
     def add_borrower(self):
-        pass
+        self.AddBorrowerWindow = Toplevel(self.parent)
+        self.borrow_app = AddBorrower(self.AddBorrowerWindow)
