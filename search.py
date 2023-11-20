@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox, simpledialog
+from tkinter import ttk
 from tkinter.ttk import Treeview
 
 from schema import *
@@ -24,7 +25,7 @@ class MainPage():
         self.parent = master
         # Configure and pack widgets specific to the main page
         self.parent.title("Library Management System")
-        self.frame = Frame(self.parent, width=1100, height=550)
+        self.frame = ttk.Frame(self.parent, width=1100, height=550)
         self.frame.grid(row=0, column=0)
         self.frame.grid_rowconfigure(0, weight=1)
         self.frame.grid_columnconfigure(0, weight=1)
@@ -37,41 +38,41 @@ class MainPage():
         self.bookForCheckOutIsbn = None
 
         # Frame for the welcome message and header
-        self.HeaderFrame = Frame(self.frame)
+        self.HeaderFrame = ttk.Frame(self.frame)
         self.HeaderFrame.grid(row=0, column=0, sticky='n')
         self.HeaderFrame.grid_rowconfigure(0, weight=1)
         self.HeaderFrame.grid_columnconfigure(0, weight=1)
         
         # # Label for the welcome message
-        self.HeaderLabel = Label(self.HeaderFrame, text='What Book Do You Want?', font="Helvetica")
+        self.HeaderLabel = ttk.Label(self.HeaderFrame, text='Author: Raaed Syed', font="Helvetica")
         self.HeaderLabel.grid(row=0, column=0)
         self.HeaderLabel.grid_rowconfigure(0, weight=10)
         self.HeaderLabel.grid_columnconfigure(0, weight=10)
         
         #Label for the searchbox
-        self.SearchLabel = Label(self.HeaderFrame, text='')
+        self.SearchLabel = ttk.Label(self.HeaderFrame, text='')
         self.SearchLabel.grid(row=1, column=0)
         self.SearchLabel.grid_rowconfigure(1, weight=10)
         self.SearchLabel.grid_columnconfigure(0, weight=10)
 
         # Search Frame
-        self.SearchFrame = Frame(self.frame)
+        self.SearchFrame = ttk.Frame(self.frame)
         self.SearchFrame.grid(row=1, column=0, sticky='n')
         self.SearchFrame.grid_rowconfigure(1, weight=1)
         # self.SearchFrame.grid_columnconfigure(0, weight=1)
-        self.SearchLabel = Label(self.SearchFrame, text='Search')
+        self.SearchLabel = ttk.Label(self.SearchFrame, text='Search')
         self.SearchLabel.grid(row=0, column=0)
         self.SearchLabel.grid_rowconfigure(0, weight=1)
         # self.SearchLabel.grid_columnconfigure(0, weight=1)
-        self.SearchTextBox = Entry(self.SearchFrame, fg='white', width=70)
+        self.SearchTextBox = ttk.Entry(self.SearchFrame, width=70)
         self.SearchTextBox.grid(row=1, column=0)
         self.SearchTextBox.grid_rowconfigure(1, weight=1)
-        self.SearchButton = Button(self.SearchFrame, text='Search', command=self.search)
+        self.SearchButton = ttk.Button(self.SearchFrame, text='Search', command=self.search)
         self.SearchButton.grid(row=2, column=0)
         self.SearchButton.grid_rowconfigure(2, weight=1)
 
         # Search Result Frame
-        self.ActiveArea = Frame(self.frame)
+        self.ActiveArea = ttk.Frame(self.frame)
         self.ActiveArea.grid(row=2, column=0, sticky='n')
         self.ActiveArea.grid_rowconfigure(2, weight=1)
         self.ResultTreeview = Treeview(self.ActiveArea, columns=["ISBN", "Book Title", "Author(s)", "Availability"])
@@ -84,24 +85,24 @@ class MainPage():
         self.ResultTreeview.bind('<ButtonRelease-1>', self.select_book_for_checkout)
 
         # Interaction Frame
-        self.MajorFunctions = Frame(self.frame)
+        self.MajorFunctions = ttk.Frame(self.frame)
         self.MajorFunctions.grid(row=3, column=0, sticky='n')
         self.MajorFunctions.grid_rowconfigure(3, weight=1)
-        self.checkOutBtn = Button(self.MajorFunctions, text="Check Out Book", command=self.check_out)
+        self.checkOutBtn = ttk.Button(self.MajorFunctions, text="Check Out Book", command=self.check_out)
         self.checkOutBtn.grid(row=0, column=0, padx=10, pady=10)
         self.checkOutBtn.grid_rowconfigure(0, weight=1)
         self.checkOutBtn.grid_columnconfigure(0, weight=1)
-        self.checkInBtn = Button(self.MajorFunctions, text="Check In Book", command=self.check_in)
+        self.checkInBtn = ttk.Button(self.MajorFunctions, text="Check In Book", command=self.check_in)
         self.checkInBtn.grid(row=0, column=1, padx=10, pady=10)
         self.checkOutBtn.grid_rowconfigure(0, weight=1)
         self.checkOutBtn.grid_columnconfigure(1, weight=1)
-        self.updateFinesBtn = Button(self.MajorFunctions, text="Updates Fines", command=self.update_fines)
+        self.updateFinesBtn = ttk.Button(self.MajorFunctions, text="Updates Fines", command=self.update_fines)
         self.updateFinesBtn.grid(row=1, column=0, padx=10, pady=10)
-        self.payFinesBtn = Button(self.MajorFunctions, text="Pay Fines", command=self.pay_fines)
+        self.payFinesBtn = ttk.Button(self.MajorFunctions, text="Pay Fines", command=self.pay_fines)
         self.payFinesBtn.grid(row=1, column=1, padx=10, pady=10)
-        self.changeDayBtn = Button(self.MajorFunctions, text="Change Day", command=self.change_day)
+        self.changeDayBtn = ttk.Button(self.MajorFunctions, text="Change Day", command=self.change_day)
         self.changeDayBtn.grid(row=1, column=2, padx=10, pady=10)
-        self.addBorrowerBtn = Button(self.MajorFunctions, text="Add New Borrower", command=self.add_borrower)
+        self.addBorrowerBtn = ttk.Button(self.MajorFunctions, text="Add New Borrower", command=self.add_borrower)
         self.addBorrowerBtn.grid(row=0, column=2, padx=10, pady=10)
 
     def search(self):
