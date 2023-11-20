@@ -1,4 +1,3 @@
-from main import * 
 from schema import *
 
 from tkinter import *
@@ -69,8 +68,8 @@ class AddBorrower:
             phone_num = self.numberTB.get()
             
         new_borrower = Borrower(card_id=id, ssn=ssn, bname=self.nameTB.get(), address= address, phone=phone_num)
-        # session.add(new_borrower)
-        # session.commit()
+        session.add(new_borrower)
+        session.commit()
         session.close()
 
         messagebox.showinfo(message="Borrower added successfully!")

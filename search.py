@@ -170,11 +170,11 @@ class MainPage():
 
         id = session.query(func.max(Book_Loans.loan_id)).scalar() + 1 
         new_loan = Book_Loans(loan_id=id, isbn=self.bookForCheckOutIsbn, card_id=self.borrowerId, date_out=today_date, due_date= today_date + timedelta(days=14))
-        # session.add(new_loan)
+        session.add(new_loan)
         new_fine = Fines(loan_id=id, fine_amt=0.0, paid=False)
-        # session.add(new_fine)
+        session.add(new_fine)
 
-        # session.commit()
+        session.commit()
         session.close()
 
         messagebox.showinfo(message="Book loaned out successfully!")
