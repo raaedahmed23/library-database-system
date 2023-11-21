@@ -22,7 +22,7 @@ A library management desktop application made using Python, Tkinter (GUI) and My
 0. Change the `db_url` variable in all modules to the corresponding database url (I realize this is not efficient. I'll fix it ...eventually)
 1. Run schema.py to create the tables in the database \
 ```python schema.py```
-2. Run the python scripts in `/scripts` to populate the Books, Authors and Book_Authors tables.
+2. Run the python scripts in `/scripts` to populate the Book, Author, Book_Author and Borrower tables.
 3. Run the application using the command \
 ```python main.py```
 
