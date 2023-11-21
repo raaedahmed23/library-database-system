@@ -154,6 +154,9 @@ class MainPage():
         
         self.borrowerId = simpledialog.askstring("Check Out Book", "Enter Borrower ID")
 
+        if self.borrowerId is None:
+            return None
+
         session = Session()
 
         is_present = session.query(Borrower.card_id).filter(Borrower.card_id == self.borrowerId).count() > 0
