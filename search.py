@@ -172,7 +172,10 @@ class MainPage():
             session.close()
             return None
 
-        id = session.query(func.max(Book_Loans.loan_id)).scalar() + 1 
+        try:
+            id = session.query(func.max(Book_Loans.loan_id)).scalar() + 1 
+        except:
+            id = 1
         new_loan = Book_Loans(loan_id=id, isbn=self.bookForCheckOutIsbn, card_id=self.borrowerId, date_out=today_date, due_date= today_date + timedelta(days=14))
         session.add(new_loan)
         new_fine = Fines(loan_id=id, fine_amt=0.0, paid=False)
